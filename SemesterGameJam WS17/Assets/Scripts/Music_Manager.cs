@@ -40,6 +40,8 @@ public class Music_Manager : MonoBehaviour
             case 1:
                 music_Source.clip = main_Music;
                 break;
+            default:
+                break;
         }
         //Fade up the volume very quickly, over resetTime seconds (.01 by default)
         FadeUp(resetTime);

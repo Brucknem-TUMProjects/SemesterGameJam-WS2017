@@ -17,6 +17,16 @@ public class Main_Menu : MonoBehaviour
         {
             DontDestroyOnLoad(transform.gameObject);
             instance = this;
+            GameData.Instance.LoadHighscore();
+            Load_Settings();
+            //music.value = GameData.Instance.Music_Volume;
+            //sfx.value = GameData.Instance.SFX_Volume;
+            SetMusicLevel(GameData.Instance.Music_Volume);
+            SetSfxLevel(GameData.Instance.SFX_Volume);
+            dropdown.onValueChanged.AddListener(delegate { GameData.Instance.inputType = dropdown.value; });
+            dropdownDiff.onValueChanged.AddListener(delegate { GameData.Instance.startVelocity = (dropdownDiff.value + 1) * 10;
+                print(GameData.Instance.startVelocity);
+            });
         }
         else if(instance != this)
         {
@@ -38,9 +48,16 @@ public class Main_Menu : MonoBehaviour
     public AudioMixer main_Mixer;
     public int scene_To_Load;
 
+    public Text score_Text;
+    public Dropdown dropdown;
+    public Dropdown dropdownDiff;
+    //public Slider music;
+    //public Slider sfx;
+
     #region Panels
     public GameObject main_Panel;
     public GameObject pause_Panel;
+    public GameObject death_Panel;
     public GameObject settings_Panel;
 
     #region Panelmanagement
@@ -62,6 +79,17 @@ public class Main_Menu : MonoBehaviour
         pause_Panel.SetActive(false);
     }
 
+    public void ShowDeathPanel()
+    {
+        death_Panel.SetActive(true);
+        Invoke("Return_toMenu", 3);
+        //Time.timeScale = 0;
+    }
+    public void HideDeathPanel()
+    {
+        death_Panel.SetActive(false);
+    }
+
     public void ShowSettingsPanel()
     {
         settings_Panel.SetActive(true);
@@ -75,17 +103,26 @@ public class Main_Menu : MonoBehaviour
     #endregion
     #endregion
 
-
     void Update()
     {
-
-        if (Input.GetButtonDown("Cancel") && !in_Main_Menu && !GameData.Instance.Is_Paused)
+        if (Input.GetButtonDown("Cancel") && !in_Main_Menu && !GameData.Instance.Is_Paused && death_Panel.activeSelf != true)
         {
             Pause_Game();
         }
-        else if(Input.GetButtonDown("Cancel") && !in_Main_Menu && GameData.Instance.Is_Paused)
+        else if(Input.GetButtonDown("Cancel") && !in_Main_Menu && GameData.Instance.Is_Paused && death_Panel.activeSelf != true)
         {
             Unpause_Game();
+        }
+
+        if (!GameData.Instance.IsAlive)
+        {
+            On_Death();
+        }
+
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            GameData.Instance.Invincible = !GameData.Instance.Invincible;
+            print("invincible " + GameData.Instance.Invincible);
         }
     }
 
@@ -109,6 +146,9 @@ public class Main_Menu : MonoBehaviour
     // Start the game
     public void Start_Game()
     {
+        GameData.Instance.startVelocity = (dropdownDiff.value + 1) * 10f;
+        GameData.Instance.inputType = dropdown.value;
+        Cursor.visible = false;
         music_Manager.FadeDown(fade.length);
         Invoke("LoadDelayed", fade.length * .5f);
         fadeAnim.SetTrigger("FadeScene");
@@ -144,6 +184,7 @@ public class Main_Menu : MonoBehaviour
     {
         GameData.Instance.Is_Paused = true;
 
+        Cursor.visible = true;
         ShowPausePanel();
         Time.timeScale = 0;
     }
@@ -151,6 +192,7 @@ public class Main_Menu : MonoBehaviour
     {
         GameData.Instance.Is_Paused = false;
 
+        Cursor.visible = false;
         HidePausePanel();
         Time.timeScale = 1;
     }
@@ -158,6 +200,8 @@ public class Main_Menu : MonoBehaviour
     public void Return_toMenu()
     {
         Time.timeScale = 1;
+        GameData.Instance.Is_Paused = false;
+
         music_Manager.FadeDown(fade.length);
         Invoke("BackToMenuDelayed", fade.length * .5f);
         fadeAnim.SetTrigger("FadeScene");
@@ -165,9 +209,31 @@ public class Main_Menu : MonoBehaviour
     }
     void BackToMenuDelayed()
     {
-        HidePausePanel();
+        if(pause_Panel.activeSelf == true)
+            HidePausePanel();
+        if (death_Panel.activeSelf == true)
+            HideDeathPanel();
         SceneManager.LoadScene(0);
         ShowMainPanel();
+    }
+    #endregion
+
+    //
+    #region Death Screen
+    public void On_Death()
+    {
+        int temp = GameData.Instance.highscore;
+        if(GameData.Instance.highscore < GameData.Instance.Score)
+        {
+            GameData.Instance.highscore = GameData.Instance.Score;
+            GameData.Instance.Save_Highscore();
+        }
+
+        GameData.Instance.IsAlive = true;
+        GameData.Instance.Is_Paused = true;
+        score_Text.text = "your score: " + GameData.Instance.Score + " \nlast highscore: " + temp;
+        Cursor.visible = true;
+        Invoke("ShowDeathPanel", 5f);
     }
     #endregion
 
@@ -213,6 +279,8 @@ public class Main_Menu : MonoBehaviour
             HideSettingsPanel();
             ShowPausePanel();
         }
+
+        GameData.Instance.Save_Settings();
     }
 
     //save settings persistent via GameData
@@ -223,7 +291,7 @@ public class Main_Menu : MonoBehaviour
 
     public void Load_Settings()
     {
-        GameData.Instance.Load("settings");
+        GameData.Instance.LoadSettings();
     }
 
     #endregion

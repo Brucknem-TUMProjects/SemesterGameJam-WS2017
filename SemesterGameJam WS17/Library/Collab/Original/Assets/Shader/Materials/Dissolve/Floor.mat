@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Floor
+  m_Shader: {fileID: 4800000, guid: 601cff107ed7bab48be6b8c6d5005137, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 2450
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _DissolveTex:
+        m_Texture: {fileID: 2800000, guid: ad58151096b55144d848c68b4bc11c40, type: 3}
+        m_Scale: {x: 2, y: 8}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 2800000, guid: 53cbf35bf5840294a89b689ea8f9e3ac, type: 3}
+        m_Scale: {x: 2, y: 8}
+        m_Offset: {x: 0, y: 0}
+    - _Illum:
+        m_Texture: {fileID: 2800000, guid: 5ebc44cebeb3ad547a22d3215f585f74, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 53cbf35bf5840294a89b689ea8f9e3ac, type: 3}
+        m_Scale: {x: 2, y: 8}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex_ST:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _DissolveSize: 50
+    - _DissolveY: 0
+    - _DissolveZ: 0
+    - _DynamicEmission: 0
+    - _Emission: 0
+    - _EmissionLM: 10
+    - _EmissionMult: 2
+    - _EmissionMultiplier: 2
+    - _Frequency: 2
+    - _MinPulseVal: 0.438
+    - _Speed: 480.5033
+    - _StartingTime: 5.2130146
+    - _StartingY: -1.5
+    - _StartingZ: 20
+    m_Colors:
+    - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
